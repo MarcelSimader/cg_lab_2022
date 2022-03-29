@@ -1,0 +1,5 @@
+#! /usr/bin/bash
+
+python3 -m http.server &> /dev/null &
+echo -e "Server started..."
+

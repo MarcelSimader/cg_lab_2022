@@ -1,0 +1,5 @@
+#! /usr/bin/bash
+
+pkill python3
+echo -e "Server stopped..."
+
