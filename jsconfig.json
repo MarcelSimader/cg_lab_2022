@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "target": "es2020",
+        "module": "none",
+        "checkJs": true
+    },
+
+    "include": [
+        "0?_*/**/*",
+        "libs/**/*"
+    ]
+}
+
