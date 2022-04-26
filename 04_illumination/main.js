@@ -85,9 +85,13 @@ function createSceneGraph(gl, resources) {
     root.append(rotateLight2);
 
     light2Animation = new Animation(rotateLight2, [
-      { matrix: progress => mat4.rotateY(mat4.create(), mat4.translate(mat4.create(), mat4.create(), [0, 0, 0]), glm.deg2rad(-360 * progress)), duration: 3000 },
-    ],
-    true);
+      { matrix: progress => mat4.rotateY(
+            mat4.create(), //output
+            mat4.translate(mat4.create(), mat4.create(), [0, 0, 0]), // matrix to tanslate
+            glm.deg2rad(-360 * progress) //translation
+          ), duration: 3000 },
+      ],
+      true);
     light2Animation.start();
   }
 
