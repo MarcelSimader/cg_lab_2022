@@ -70,7 +70,7 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec,
 }
 
 void main() {
-	//TASK 2-3 use material uniform
+	//TASK 2-2 use material uniform
 	//TASK 3-2 use light uniform
 	//TASK 5-6 use second light source
 	gl_FragColor = calculateSimplePointLight(light, material, v_lightVec,
