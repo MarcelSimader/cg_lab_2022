@@ -44,8 +44,8 @@ varying vec4 v_shadowMapTexCoord;
 uniform sampler2D u_depthMap;
 
 vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, vec3 normalVec, vec3 eyeVec, vec4 textureColor) {
-	// You can find all built-in functions (min, max, clamp, reflect, normalize, etc.) 
-	// and variables (gl_FragCoord, gl_Position) in the OpenGL Shading Language Specification: 
+	// You can find all built-in functions (min, max, clamp, reflect, normalize, etc.)
+	// and variables (gl_FragCoord, gl_Position) in the OpenGL Shading Language Specification:
 	// https://www.khronos.org/registry/OpenGL/specs/gl/GLSLangSpec.4.60.html#built-in-functions
 	lightVec = normalize(lightVec);
 	normalVec = normalize(normalVec);
@@ -75,7 +75,9 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	//Normally you should pass them to the calculateSimplePointLight function as parameters since they change for each light source!
 
   	//TASK 2.3: apply perspective division to v_shadowMapTexCoord and save to shadowMapTexCoord3D
-  	vec3 shadowMapTexCoord3D = vec3(0,0,0);
+  	vec3 shadowMapTexCoord3D = v_shadowMapTexCoord.xyz / v_shadowMapTexCoord.w;
+
+        shadowMapTexCoord3D = vec3(0.5, 0.5, 0.5) + 0.5 * shadowMapTexCoord3D;
 
 	//substract small amount from z to get rid of self shadowing (TRY: disable to see difference)
 	shadowMapTexCoord3D.z -= 0.003;
@@ -83,10 +85,12 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
   	float shadowCoeff = 1.0; //set to 1 if no shadow!
 	//TASK 2.4: look up depth in u_depthMap and set shadow coefficient (shadowCoeff) to 0 based on depth comparison
 
-
+        shadowCoeff = (texture2D(u_depthMap, shadowMapTexCoord3D.xy).x >= shadowMapTexCoord3D.z)
+            ? shadowCoeff
+            : 0.0;
 
   	//TASK 2.5: apply shadow coefficient to diffuse and specular part
-  	return c_amb + c_diff + c_spec + c_em;
+  	return c_amb + (shadowCoeff * (c_diff + c_spec)) + c_em;
 }
 
 void main (void) {

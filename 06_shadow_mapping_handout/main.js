@@ -234,7 +234,9 @@ class ShadowSGNode extends SGNode {
 
     //TASK 2.1: compute eye-to-light matrix by multiplying this.lightViewProjectionMatrix and context.invViewMatrix
     //Hint: Look at the computation of lightViewProjectionMatrix to see how to multiply two matrices and for the correct order of the matrices!
-    var eyeToLightMatrix = mat4.create();
+    var eyeToLightMatrix = mat4.multiply(
+      mat4.create(), this.lightViewProjectionMatrix, context.invViewMatrix
+    );
     gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_eyeToLightMatrix'), false, eyeToLightMatrix);
 
     //activate and bind texture
@@ -272,7 +274,8 @@ function renderToTexture(timeInMilliseconds)
   let worldLightLookAtPos = [0,0,0];
   let upVector = [0,1,0];
   //TASK 1.1: setup camera to look at the scene from the light's perspective
-  let lookAtMatrix = mat4.lookAt(mat4.create(), [0,1,-10], [0,0,0], [0,1,0]); //replace me for TASK 1.1
+  let lookAtMatrix = mat4.lookAt(mat4.create(), worldLightPos, worldLightLookAtPos, upVector);
+  // let lookAtMatrix = mat4.lookAt(mat4.create(), [0,1,-10], [0,0,0], [0,1,0]); //replace me for TASK 1.1
   context.viewMatrix = lookAtMatrix;
 
   //multiply and save light projection and view matrix for later use in shadow mapping shader!
@@ -345,8 +348,8 @@ function initInteraction(canvas) {
     const delta = { x : mouse.pos.x - pos.x, y: mouse.pos.y - pos.y };
     if (mouse.leftButtonDown) {
       //add the relative movement of the mouse to the rotation variables
-  		camera.rotation.x += delta.x;
-  		camera.rotation.y += delta.y;
+          camera.rotation.x += delta.x;
+          camera.rotation.y += delta.y;
     }
     mouse.pos = pos;
   });
@@ -359,7 +362,7 @@ function initInteraction(canvas) {
     //https://developer.mozilla.org/en-US/docs/Web/API/KeyboardEvent
     if (event.code === 'KeyR') {
       camera.rotation.x = 0;
-  		camera.rotation.y = 0;
+          camera.rotation.y = 0;
     }
   });
 }

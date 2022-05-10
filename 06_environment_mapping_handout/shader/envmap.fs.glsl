@@ -16,15 +16,13 @@ uniform samplerCube u_texCube;
 //entry point again
 void main() {
   vec3 normalVec = normalize(v_normalVec);
-	vec3 cameraRayVec = normalize(v_cameraRayVec);
+  vec3 cameraRayVec = normalize(v_cameraRayVec);
 
-  vec3 texCoords;
-  if(u_useReflection)
-      //TASK 3.2: compute reflected camera ray (assign to texCoords)
-  		texCoords = vec3(0,0,0);
-  else
-  		texCoords = cameraRayVec;
+  //TASK 3.2: compute reflected camera ray (assign to texCoords)
+  vec3 texCoords = u_useReflection
+    ? reflect(cameraRayVec, normalVec)
+    : cameraRayVec;
 
   //TASK 3.3: do texture lookup in cube map using the textureCube function
-  gl_FragColor = vec4(0,0,0,0);
+  gl_FragColor = textureCube(u_texCube, texCoords);
 }
